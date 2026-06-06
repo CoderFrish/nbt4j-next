@@ -1,15 +1,3 @@
 # nbt4j-next
 
-该库尚未完成
-
-## API
-
-```java
-void main() {
-    NBTCompound compound = new NBTCompound();
-    compound.add("name", "Frish2021");
-    compound.add("age", 16);
-    
-    NBTWriter.write(xxxxxx, compound);
-}
-```
+该库尚未完成，预计完成了简单的读写功能以及所有的类型就能发布了。

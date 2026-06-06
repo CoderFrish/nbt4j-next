@@ -1,6 +1,6 @@
 package me.coderfrish.nbt4j;
 
-public abstract class NBTElement {
+public abstract class NBTagElement {
     public String getAsString() {
         throw new IllegalArgumentException("Not a String.");
     }
@@ -9,8 +9,8 @@ public abstract class NBTElement {
         throw new IllegalArgumentException("Not a Short.");
     }
 
-    public int getAsInteger() {
-        throw new IllegalArgumentException("Not a Integer.");
+    public int getAsInt() {
+        throw new IllegalArgumentException("Not a Int.");
     }
 
     public byte getAsByte() {
@@ -29,11 +29,9 @@ public abstract class NBTElement {
         throw new IllegalArgumentException("Not a Double.");
     }
 
-    public NBTCompound getAsCompound() {
-        throw new IllegalArgumentException("Not a Compound.");
+    public NBTagCompound getAsCompound() {
+        throw new NBTException("Not a compound.");
     }
 
-    public Number getAsNumber() {
-        throw new IllegalArgumentException("Not a Number.");
-    }
+    public abstract NBTagType type();
 }
