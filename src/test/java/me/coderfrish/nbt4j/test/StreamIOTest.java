@@ -4,6 +4,7 @@ import me.coderfrish.nbt4j.NBTStreamUtils;
 import me.coderfrish.nbt4j.NBTagCompound;
 import me.coderfrish.nbt4j.NBTagElement;
 import me.coderfrish.nbt4j.NBTagList;
+import org.junit.jupiter.api.Test;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -12,7 +13,8 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 public class StreamIOTest {
-    static void main() throws Exception {
+    @Test
+    void test() throws Exception {
         boolean readable = true;
 
         if (readable) {
