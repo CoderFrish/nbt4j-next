@@ -21,14 +21,14 @@ abstract class NBTagPrimitive extends NBTagElement {
             (b, v) -> b.writeShort(v.getAsShort())
     );
 
-    static final StreamCodec<BaseByteBuffer, TagFloat> FLOAT_CODEC = StreamCodec.createCodec(
-            (b) -> new TagFloat(Float.intBitsToFloat(b.readInt())),
-            (b, v) -> b.writeInt(Float.floatToIntBits(v.getAsFloat()))
+    static final StreamCodec<NBTByteBuffer, TagFloat> FLOAT_CODEC = StreamCodec.createCodec(
+            (b) -> new TagFloat(b.readFloat()),
+            (b, v) -> b.writeFloat(v.getAsFloat())
     );
 
-    static final StreamCodec<BaseByteBuffer, TagDouble> DOUBLE_CODEC = StreamCodec.createCodec(
-            (b) -> new TagDouble(Double.longBitsToDouble(b.readLong())),
-            (b, v) -> b.writeLong(Double.doubleToLongBits(v.getAsDouble()))
+    static final StreamCodec<NBTByteBuffer, TagDouble> DOUBLE_CODEC = StreamCodec.createCodec(
+            (b) -> new TagDouble(b.readDouble()),
+            (b, v) -> b.writeDouble(v.getAsDouble())
     );
 
     static final StreamCodec<BaseByteBuffer, TagLong> LONG_CODEC = StreamCodec.createCodec(

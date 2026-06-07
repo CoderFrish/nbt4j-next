@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static me.coderfrish.nbt4j.NBTagArray.*;
 import static me.coderfrish.nbt4j.NBTagCompound.COMPOUND_CODEC;
 import static me.coderfrish.nbt4j.NBTagPrimitive.*;
 
@@ -19,6 +20,9 @@ public final class NBTypeRegistry {
             put(NBTagType.LONG, LONG_CODEC);
             put(NBTagType.DOUBLE, DOUBLE_CODEC);
             put(NBTagType.BYTE, BYTE_CODEC);
+            put(NBTagType.INT_ARRAY, INT_ARRAY_CODEC);
+            put(NBTagType.BYTE_ARRAY, BYTE_ARRAY_CODEC);
+            put(NBTagType.LONG_ARRAY, LONG_ARRAY_CODEC);
         }
     };
 

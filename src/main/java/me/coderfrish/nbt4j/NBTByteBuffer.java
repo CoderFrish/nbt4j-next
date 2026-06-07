@@ -72,9 +72,90 @@ final class NBTByteBuffer extends BaseByteBuffer {
             NBTagType type = NBTagType.values()[typeId - 1];
             String key = readUTF();
             NBTagElement value = decode(type, this);
-            compound.add(key, value);
+            compound.addProperty(key, value);
         }
 
         return compound;
     }
+
+    public void writeIntArray(NBTagArray.NBTagIntArray value) throws IOException {
+        this.writeInt(value.getAsIntArray().length);
+        for (int item : value.getAsIntArray()) {
+            this.writeInt(item);
+        }
+    }
+
+    public NBTagArray.NBTagIntArray readIntArray() throws IOException {
+        int length = readInt();
+        if (length < 0) {
+            throw new RuntimeException("The prefix is of negative length ):");
+        }
+
+        byte[] bytes = new byte[length * 4];
+        readBytes(bytes);
+        int byteIndex = 0;
+
+        int[] intArray = new int[length];
+        for (int i = 0; i < length; i++, byteIndex += 4) {
+            int element = 0;
+            int bitOffset = 24;
+            for (int b = 0; b < 4; b++, bitOffset -= 8) {
+                element |= (bytes[byteIndex + b] & 0xFF) << bitOffset;
+            }
+            intArray[i] = element;
+        }
+
+        return new NBTagArray.NBTagIntArray(intArray);
+    }
+
+    public void writeByteArray(NBTagArray.NBTagByteArray value) throws IOException {
+        this.writeInt(value.getAsByteArray().length);
+        for (byte item : value.getAsByteArray()) {
+            this.writeByte(item);
+        }
+    }
+
+    public NBTagArray.NBTagByteArray readByteArray() throws IOException {
+        int length = readInt();
+        if (length < 0) {
+            throw new RuntimeException("The prefix is of negative length ):");
+        }
+
+        byte[] bytes = new byte[length];
+        readBytes(bytes);
+
+        return new NBTagArray.NBTagByteArray(bytes);
+    }
+
+    public void writeLongArray(NBTagArray.NBTagLongArray value) throws IOException {
+        this.writeInt(value.getAsLongArray().length);
+        for (long item : value.getAsLongArray()) {
+            this.writeLong(item);
+        }
+    }
+
+    public NBTagArray.NBTagLongArray readLongArray() throws IOException {
+        int length = readInt();
+        if (length < 0) {
+            throw new RuntimeException("The prefix is of negative length ):");
+        } else if (length == 0) {
+            return new NBTagArray.NBTagLongArray(new long[0]);
+        }
+
+        byte[] bytes = new byte[length * 8];
+        readBytes(bytes);
+        int byteIndex = 0;
+
+        long[] longArray = new long[length];
+        for (int i = 0; i < length; i++, byteIndex += 8) {
+            long element = 0;
+            int bitOffset = 56;
+            for (int b = 0; b < 8; b++, bitOffset -= 8) {
+                element |= ((long) (bytes[byteIndex + b] & 0xFF)) << bitOffset;
+            }
+            longArray[i] = element;
+        }
+        return new NBTagArray.NBTagLongArray(longArray);
+    }
+
 }

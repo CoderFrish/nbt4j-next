@@ -12,36 +12,48 @@ public final class NBTagCompound extends NBTagElement {
 
     private final Map<String, NBTagElement> data = new ConcurrentHashMap<>();
 
-    public void add(String key, NBTagElement element)  {
+    public void addProperty(String key, NBTagElement element)  {
         this.data.put(key, element);
     }
 
     public void addProperty(String key, String value) {
-        this.add(key, new NBTagPrimitive.TagString(value));
+        this.addProperty(key, new NBTagPrimitive.TagString(value));
     }
 
     public void addProperty(String key, int value) {
-        this.add(key, new NBTagPrimitive.TagInt(value));
+        this.addProperty(key, new NBTagPrimitive.TagInt(value));
     }
 
     public void addProperty(String key, long value) {
-        this.add(key, new NBTagPrimitive.TagLong(value));
+        this.addProperty(key, new NBTagPrimitive.TagLong(value));
     }
 
     public void addProperty(String key, byte value) {
-        this.add(key, new NBTagPrimitive.TagByte(value));
+        this.addProperty(key, new NBTagPrimitive.TagByte(value));
     }
 
     public void addProperty(String key, short value) {
-        this.add(key, new NBTagPrimitive.TagShort(value));
+        this.addProperty(key, new NBTagPrimitive.TagShort(value));
     }
 
     public void addProperty(String key, float value) {
-        this.add(key, new NBTagPrimitive.TagFloat(value));
+        this.addProperty(key, new NBTagPrimitive.TagFloat(value));
     }
 
     public void addProperty(String key, double value) {
-        this.add(key, new NBTagPrimitive.TagDouble(value));
+        this.addProperty(key, new NBTagPrimitive.TagDouble(value));
+    }
+
+    public void addProperty(String key, int[] array) {
+        this.addProperty(key, new NBTagArray.NBTagIntArray(array));
+    }
+
+    public void addProperty(String key, byte[] array) {
+        this.addProperty(key, new NBTagArray.NBTagByteArray(array));
+    }
+
+    public void addProperty(String key, long[] array) {
+        this.addProperty(key, new NBTagArray.NBTagLongArray(array));
     }
 
     public NBTagElement get(String key) {

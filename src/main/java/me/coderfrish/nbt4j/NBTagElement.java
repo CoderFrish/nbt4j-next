@@ -33,5 +33,17 @@ public abstract class NBTagElement {
         throw new NBTException("Not a compound.");
     }
 
+    public byte[] getAsByteArray() {
+        throw new NBTException("Not a byte array.");
+    }
+
+    public int[] getAsIntArray() {
+        throw new NBTException("Not a int array");
+    }
+
+    public long[] getAsLongArray() {
+        throw new NBTException("Not a long array");
+    }
+
     public abstract NBTagType type();
 }
