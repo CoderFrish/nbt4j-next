@@ -6,6 +6,7 @@ import java.util.Map;
 
 import static me.coderfrish.nbt4j.NBTagArray.*;
 import static me.coderfrish.nbt4j.NBTagCompound.COMPOUND_CODEC;
+import static me.coderfrish.nbt4j.NBTagList.LIST_CODEC;
 import static me.coderfrish.nbt4j.NBTagPrimitive.*;
 
 @SuppressWarnings("unchecked")
@@ -23,6 +24,7 @@ public final class NBTypeRegistry {
             put(NBTagType.INT_ARRAY, INT_ARRAY_CODEC);
             put(NBTagType.BYTE_ARRAY, BYTE_ARRAY_CODEC);
             put(NBTagType.LONG_ARRAY, LONG_ARRAY_CODEC);
+            put(NBTagType.LIST, LIST_CODEC);
         }
     };
 

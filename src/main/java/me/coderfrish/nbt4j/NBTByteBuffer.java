@@ -158,4 +158,35 @@ final class NBTByteBuffer extends BaseByteBuffer {
         return new NBTagArray.NBTagLongArray(longArray);
     }
 
+    public void writeList(NBTagList list) throws IOException {
+        if (list.getData().isEmpty()) {
+            this.writeByte((byte) 0);
+            this.writeInt(0);
+            return;
+        }
+
+        NBTagType type = list.getData().getFirst().type();
+        this.writeByte((byte) (type.ordinal() + 1));
+        this.writeInt(list.getData().size());
+        for (NBTagElement tag : list.getData()) {
+            encode(type, this, tag);
+        }
+    }
+
+    public NBTagList readList() throws IOException {
+        NBTagList list = new NBTagList();
+        int typeId = readByte();
+        if (typeId == 0) {
+            return new NBTagList();
+        }
+
+        NBTagType type = NBTagType.values()[typeId - 1];
+        int length = readInt();
+        for (int i = 0; i < length; i++) {
+            NBTagElement element = decode(type, this);
+            list.addProperty(element);
+        }
+
+        return list;
+    }
 }

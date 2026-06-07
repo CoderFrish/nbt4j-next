@@ -3,6 +3,7 @@ package me.coderfrish.nbt4j.test;
 import me.coderfrish.nbt4j.NBTStreamUtils;
 import me.coderfrish.nbt4j.NBTagCompound;
 import me.coderfrish.nbt4j.NBTagElement;
+import me.coderfrish.nbt4j.NBTagList;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -25,6 +26,11 @@ public class StreamIOTest {
                 System.out.println(i);
             }
 
+            NBTagElement list0 = compound.get("list0");
+            System.out.println(list0.getAsList().get(0).getAsString());
+            System.out.println(list0.getAsList().get(1).getAsString());
+            System.out.println(list0.getAsList().get(2).getAsString());
+
             System.out.println(name.getAsString() + " | " + age.getAsInt());
         }
 
@@ -32,6 +38,21 @@ public class StreamIOTest {
             NBTagCompound compound = new NBTagCompound();
             compound.addProperty("name", "Frish2021");
             compound.addProperty("age", 13);
+
+            NBTagList list = new NBTagList();
+
+            /* 报错测试 */
+            if (false) {
+                list.addProperty(1000);
+                list.addProperty("Error");
+            }
+
+            list.addProperty("fgdgfgg");
+            list.addProperty("fgdsfgdsf");
+            list.addProperty("gfgsg");
+            list.addProperty("sgsg");
+            list.addProperty("gfsgsg");
+            compound.addProperty("list0", list);
 
             int[] test0 = new int[]{12, 60, 80};
             compound.addProperty("test0", test0);
