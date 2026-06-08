@@ -6,9 +6,6 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-import static me.coderfrish.nbt4j.NBTypeRegistry.decode;
-import static me.coderfrish.nbt4j.NBTypeRegistry.encode;
-
 final class NBTByteBuffer extends BaseByteBuffer {
     public NBTByteBuffer(OutputStream os) {
         super(os);
@@ -57,7 +54,7 @@ final class NBTByteBuffer extends BaseByteBuffer {
             NBTagType type = entry.getValue().type();
             this.writeByte((byte) (type.ordinal() + 1));
             this.writeUTF(entry.getKey());
-            encode(type, this, entry.getValue());
+            type.encode(this, entry);
         }
 
         writeByte((byte) 0);
@@ -71,7 +68,7 @@ final class NBTByteBuffer extends BaseByteBuffer {
 
             NBTagType type = NBTagType.values()[typeId - 1];
             String key = readUTF();
-            NBTagElement value = decode(type, this);
+            NBTagElement value = type.decode(this);
             compound.addProperty(key, value);
         }
 
@@ -150,7 +147,7 @@ final class NBTByteBuffer extends BaseByteBuffer {
         this.writeByte((byte) (type.ordinal() + 1));
         this.writeInt(list.getData().size());
         for (NBTagElement tag : list.getData()) {
-            encode(type, this, tag);
+            type.encode(this, tag);
         }
     }
 
@@ -164,7 +161,7 @@ final class NBTByteBuffer extends BaseByteBuffer {
         NBTagType type = NBTagType.values()[typeId - 1];
         int length = readInt();
         for (int i = 0; i < length; i++) {
-            NBTagElement element = decode(type, this);
+            NBTagElement element = type.decode(this);
             list.addProperty(element);
         }
 

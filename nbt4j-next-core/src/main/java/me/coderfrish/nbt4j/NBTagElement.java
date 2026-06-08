@@ -1,6 +1,8 @@
 package me.coderfrish.nbt4j;
 
 public abstract class NBTagElement {
+    public abstract NBTagType type();
+
     public String getAsString() {
         throw new NBTException("Not a string.");
     }
@@ -48,6 +50,4 @@ public abstract class NBTagElement {
     public NBTagList getAsList() {
         throw new NBTException("Not a list.");
     }
-
-    public abstract NBTagType type();
 }
