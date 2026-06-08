@@ -12,7 +12,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
-public class StreamIOTest {
+public class ReadAndWriteTest {
     @Test
     void test() throws Exception {
         boolean readable = true;
@@ -22,16 +22,14 @@ public class StreamIOTest {
             NBTagCompound compound = NBTStreamUtils.read(is);
             NBTagElement name = compound.get("name");
             NBTagElement age = compound.get("age");
-            NBTagElement test0 = compound.get("test0");
+            NBTagElement test2 = compound.get("test2");
 
-            for (int i : test0.getAsIntArray()) {
-                System.out.println(i);
-            }
+            System.out.println(new String(test2.getAsByteArray(), StandardCharsets.UTF_8));
 
             NBTagElement list0 = compound.get("list0");
-            System.out.println(list0.getAsList().get(0).getAsString());
-            System.out.println(list0.getAsList().get(1).getAsString());
-            System.out.println(list0.getAsList().get(2).getAsString());
+//            System.out.println(list0.getAsList().get(0).getAsString());
+//            System.out.println(list0.getAsList().get(1).getAsString());
+//            System.out.println(list0.getAsList().get(2).getAsString());
 
             System.out.println(name.getAsString() + " | " + age.getAsInt());
         }

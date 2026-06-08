@@ -2,31 +2,31 @@ package me.coderfrish.nbt4j;
 
 public abstract class NBTagElement {
     public String getAsString() {
-        throw new IllegalArgumentException("Not a string.");
+        throw new NBTException("Not a string.");
     }
 
     public short getAsShort() {
-        throw new IllegalArgumentException("Not a short.");
+        throw new NBTException("Not a short.");
     }
 
     public int getAsInt() {
-        throw new IllegalArgumentException("Not a int.");
+        throw new NBTException("Not a int.");
     }
 
     public byte getAsByte() {
-        throw new IllegalArgumentException("Not a byte.");
+        throw new NBTException("Not a byte.");
     }
 
     public long getAsLong() {
-        throw new IllegalArgumentException("Not a long.");
+        throw new NBTException("Not a long.");
     }
 
     public float getAsFloat() {
-        throw new IllegalArgumentException("Not a flat.");
+        throw new NBTException("Not a flat.");
     }
 
     public double getAsDouble() {
-        throw new IllegalArgumentException("Not a double.");
+        throw new NBTException("Not a double.");
     }
 
     public NBTagCompound getAsCompound() {
