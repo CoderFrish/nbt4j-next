@@ -1,14 +1,18 @@
+plugins {
+    id("io.github.jeadyx.sonatype-uploader") version "2.8" apply false
+}
+
 subprojects {
     apply(plugin = "java-library")
     apply(plugin = "signing")
-    apply(plugin = "maven-publish")
+    apply(plugin = "io.github.jeadyx.sonatype-uploader")
 
     repositories {
         mavenCentral()
         mavenLocal()
     }
 
-    group = "com.github.coderfrish"
+    group = "io.github.coderfrish"
 
     tasks {
         withType<JavaCompile> {
@@ -23,26 +27,5 @@ subprojects {
     extensions.configure<JavaPluginExtension> {
         withJavadocJar()
         withSourcesJar()
-    }
-
-    extensions.configure<PublishingExtension> {
-        repositories {
-            maven("https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/") {
-                credentials {
-                    username = System.getenv("MAVEN_USERNAME")
-                    password = System.getenv("MAVEN_PASSWORD")
-                }
-            }
-        }
-    }
-
-    extensions.configure<SigningExtension> {
-        useInMemoryPgpKeys(
-            System.getenv("SECRET_KEY"),
-            System.getenv("SECRET_PASSWORD"),
-        )
-
-        extensions.getByType<PublishingExtension>().publications
-            .forEach(::sign) /* Sign Maven Jar */
     }
 }
