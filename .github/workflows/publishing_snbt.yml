@@ -9,6 +9,7 @@ on:
       - "nbt4j-extra-snbt/src/**/*.java"
       - "nbt4j-extra-snbt/build.gradle.kts"
       - "gradle.properties"
+      - "build.gradle.kts"
 
 jobs:
   publish:
