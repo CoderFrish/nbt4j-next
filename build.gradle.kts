@@ -27,7 +27,7 @@ subprojects {
 
     extensions.configure<PublishingExtension> {
         repositories {
-            maven("https://ossrh-staging-api.central.sonatype.com/service/local/") {
+            maven("https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/") {
                 credentials {
                     username = System.getenv("MAVEN_USERNAME")
                     password = System.getenv("MAVEN_PASSWORD")
