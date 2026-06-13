@@ -1,7 +1,3 @@
-plugins {
-    id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
-}
-
 subprojects {
     apply(plugin = "java-library")
     apply(plugin = "signing")
@@ -29,6 +25,17 @@ subprojects {
         withSourcesJar()
     }
 
+    extensions.configure<PublishingExtension> {
+        repositories {
+            maven("https://ossrh-staging-api.central.sonatype.com/service/local/") {
+                credentials {
+                    username = System.getenv("MAVEN_USERNAME")
+                    password = System.getenv("MAVEN_PASSWORD")
+                }
+            }
+        }
+    }
+
     extensions.configure<SigningExtension> {
         useInMemoryPgpKeys(
             System.getenv("SECRET_KEY"),
@@ -37,17 +44,5 @@ subprojects {
 
         extensions.getByType<PublishingExtension>().publications
             .forEach(::sign) /* Sign Maven Jar */
-    }
-}
-
-nexusPublishing {
-    repositories {
-        sonatype {
-            nexusUrl.set(uri("https://ossrh-staging-api.central.sonatype.com/service/local/"))
-            snapshotRepositoryUrl.set(uri("https://central.sonatype.com/repository/maven-snapshots/"))
-
-            username.set(System.getenv("MAVEN_USERNAME"))
-            password.set(System.getenv("MAVEN_PASSWORD"))
-        }
     }
 }
