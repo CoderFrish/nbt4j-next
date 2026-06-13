@@ -16,7 +16,7 @@ public class FileReadAndWriteTest {
     @Test
     void test() throws Exception {
         boolean readable = false;
-        String file = "D:\\nbt4j-next\\nbt4j-develop-test\\src\\test\\resources\\archives.nbt";
+        String file = "D:\\nbt4j-next\\src\\test\\resources\\archives.nbt";
         InputStream is = new FileInputStream(file);
         OutputStream os = new FileOutputStream(file);
 
