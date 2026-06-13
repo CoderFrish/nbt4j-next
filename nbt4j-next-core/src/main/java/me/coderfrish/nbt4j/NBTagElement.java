@@ -50,4 +50,8 @@ public abstract class NBTagElement {
     public NBTagList getAsList() {
         throw new NBTException("Not a list.");
     }
+
+    public Number getAsNumber() {
+        throw new NBTException("Not a number.");
+    }
 }

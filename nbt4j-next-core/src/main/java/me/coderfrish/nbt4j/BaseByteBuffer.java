@@ -38,15 +38,23 @@ abstract class BaseByteBuffer implements AutoCloseable {
             os.close();
     }
 
-    public void writeBytes(byte[] value) throws IOException {
+    void writeBytes(byte[] value) throws IOException {
+        this.ensureWriteableMode();
         os.write(value);
     }
 
-    public int readBytes(byte[] b) throws IOException {
+    void writeByte(byte v) throws IOException {
+        this.ensureWriteableMode();
+        os.write(v);
+    }
+
+    int readBytes(byte[] b) throws IOException {
+        this.ensureReadableMode();
         return is.read(b, 0, b.length);
     }
 
-    public byte readByte() throws IOException {
+    byte readByte() throws IOException {
+        this.ensureReadableMode();
         byte result = (byte) is.read();
         if (result == -1)
             throw new EOFException();
@@ -54,14 +62,14 @@ abstract class BaseByteBuffer implements AutoCloseable {
         return result;
     }
 
-    public short readShort() throws IOException {
+    short readShort() throws IOException {
         if (readBytes(readShortBuffer) == -1)
             throw new EOFException();
         return (short) ((readShortBuffer[0] << 8) +
                 (readShortBuffer[1]));
     }
 
-    public int readInt() throws IOException {
+    int readInt() throws IOException {
         if (readBytes(readIntBuffer) == -1)
             throw new EOFException();
         return ((readIntBuffer[0] << 24) +
@@ -70,36 +78,32 @@ abstract class BaseByteBuffer implements AutoCloseable {
                 (readIntBuffer[3]));
     }
 
-    public long readLong() throws IOException {
+    long readLong() throws IOException {
         if (readBytes(readLongBuffer) == -1)
             throw new EOFException();
-        return (((long)readLongBuffer[0] << 56) +
-                ((long)(readLongBuffer[1] & 255) << 48) +
-                ((long)(readLongBuffer[2] & 255) << 40) +
-                ((long)(readLongBuffer[3] & 255) << 32) +
-                ((long)(readLongBuffer[4] & 255) << 24) +
+        return (((long) readLongBuffer[0] << 56) +
+                ((long) (readLongBuffer[1] & 255) << 48) +
+                ((long) (readLongBuffer[2] & 255) << 40) +
+                ((long) (readLongBuffer[3] & 255) << 32) +
+                ((long) (readLongBuffer[4] & 255) << 24) +
                 ((readLongBuffer[5] & 255) << 16) +
-                ((readLongBuffer[6] & 255) <<  8) +
+                ((readLongBuffer[6] & 255) << 8) +
                 ((readLongBuffer[7] & 255)));
     }
 
-    public void writeByte(byte v) throws IOException {
-        os.write(v);
-    }
-
-    public void writeShort(int v) throws IOException {
+    void writeShort(int v) throws IOException {
         writeByte((byte) ((v >>> 8) & 0xFF));
         writeByte((byte) (v & 0xFF));
     }
 
-    public void writeInt(int v) throws IOException {
+    void writeInt(int v) throws IOException {
         writeByte((byte) ((v >>> 24) & 0xFF));
         writeByte((byte) ((v >>> 16) & 0xFF));
         writeByte((byte) ((v >>> 8) & 0xFF));
         writeByte((byte) (v & 0xFF));
     }
 
-    public void writeLong(long v) throws IOException {
+    void writeLong(long v) throws IOException {
         writeByte((byte) ((int) (v >>> 56) & 0xFF));
         writeByte((byte) ((int) (v >>> 48) & 0xFF));
         writeByte((byte) ((int) (v >>> 40) & 0xFF));
@@ -108,5 +112,33 @@ abstract class BaseByteBuffer implements AutoCloseable {
         writeByte((byte) ((int) (v >>> 16) & 0xFF));
         writeByte((byte) ((int) (v >>> 8) & 0xFF));
         writeByte((byte) ((int) (v) & 0xFF));
+    }
+
+    float readFloat() throws IOException {
+        return Float.intBitsToFloat(this.readInt());
+    }
+
+    void writeFloat(float value) throws IOException {
+        this.writeInt(Float.floatToIntBits(value));
+    }
+
+    double readDouble() throws IOException {
+        return Double.doubleToLongBits(this.readLong());
+    }
+
+    void writeDouble(double value) throws IOException {
+        this.writeLong(Double.doubleToLongBits(value));
+    }
+
+    private void ensureReadableMode() {
+        if (!readable) {
+            throw new NBTException("This ByteBuffer not is readable mode.");
+        }
+    }
+
+    private void ensureWriteableMode() {
+        if (readable) {
+            throw new NBTException("This ByteBuffer not is writeable mode.");
+        }
     }
 }

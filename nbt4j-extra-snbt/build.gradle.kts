@@ -1,5 +1,9 @@
 version = rootProject.providers.gradleProperty("snbt_version").get()
 
+dependencies {
+    implementation(project(":nbt4j-next-core"))
+}
+
 publishing {
     publications {
         create<MavenPublication>("mavenSnbt") {

@@ -7,8 +7,8 @@ abstract class NBTagPrimitive extends NBTagElement {
     );
 
     static final StreamCodec<NBTByteBuffer, TagString> STRING_CODEC = StreamCodec.createCodec(
-            (b) -> new TagString(b.readUTF()),
-            (b, v) -> b.writeUTF(v.getAsString())
+            (b) -> new TagString(b.readString()),
+            (b, v) -> b.writeString(v.getAsString())
     );
 
     static final StreamCodec<BaseByteBuffer, TagByte> BYTE_CODEC = StreamCodec.createCodec(
@@ -58,7 +58,59 @@ abstract class NBTagPrimitive extends NBTagElement {
         }
     }
 
-    static class TagInt extends NBTagPrimitive {
+    static abstract class TagNumber extends NBTagPrimitive {
+        public TagNumber(Object object) {
+            super(object);
+        }
+
+        @Override
+        public Number getAsNumber() {
+            return (Number) object;
+        }
+
+        @Override
+        public int getAsInt() {
+            ensureTypeValue(NBTagType.INT);
+            return getAsNumber().intValue();
+        }
+
+        @Override
+        public long getAsLong() {
+            ensureTypeValue(NBTagType.LONG);
+            return getAsNumber().longValue();
+        }
+
+        @Override
+        public short getAsShort() {
+            ensureTypeValue(NBTagType.SHORT);
+            return getAsNumber().shortValue();
+        }
+
+        @Override
+        public byte getAsByte() {
+            ensureTypeValue(NBTagType.BYTE);
+            return getAsNumber().byteValue();
+        }
+
+        @Override
+        public float getAsFloat() {
+            ensureTypeValue(NBTagType.FLOAT);
+            return getAsNumber().floatValue();
+        }
+
+        @Override
+        public double getAsDouble() {
+            ensureTypeValue(NBTagType.DOUBLE);
+            return getAsNumber().doubleValue();
+        }
+
+        private void ensureTypeValue(NBTagType target) {
+            if (type() != target)
+                throw new NBTException("Type is " + type() + " not to " + target);
+        }
+    }
+
+    static class TagInt extends TagNumber {
         public TagInt(Object object) {
             super(object);
         }
@@ -67,14 +119,9 @@ abstract class NBTagPrimitive extends NBTagElement {
         public NBTagType type() {
             return NBTagType.INT;
         }
-
-        @Override
-        public int getAsInt() {
-            return (int) object;
-        }
     }
 
-    static class TagShort extends NBTagPrimitive {
+    static class TagShort extends TagNumber {
         public TagShort(Object object) {
             super(object);
         }
@@ -83,14 +130,9 @@ abstract class NBTagPrimitive extends NBTagElement {
         public NBTagType type() {
             return NBTagType.SHORT;
         }
-
-        @Override
-        public short getAsShort() {
-            return (short) object;
-        }
     }
 
-    static class TagLong extends NBTagPrimitive {
+    static class TagLong extends TagNumber {
         public TagLong(Object object) {
             super(object);
         }
@@ -99,14 +141,9 @@ abstract class NBTagPrimitive extends NBTagElement {
         public NBTagType type() {
             return NBTagType.LONG;
         }
-
-        @Override
-        public long getAsLong() {
-            return (long) object;
-        }
     }
 
-    static class TagByte extends NBTagPrimitive {
+    static class TagByte extends TagNumber {
         public TagByte(Object object) {
             super(object);
         }
@@ -115,14 +152,9 @@ abstract class NBTagPrimitive extends NBTagElement {
         public NBTagType type() {
             return NBTagType.BYTE;
         }
-
-        @Override
-        public byte getAsByte() {
-            return (byte) object;
-        }
     }
 
-    static class TagDouble extends NBTagPrimitive {
+    static class TagDouble extends TagNumber {
         public TagDouble(Object object) {
             super(object);
         }
@@ -131,14 +163,9 @@ abstract class NBTagPrimitive extends NBTagElement {
         public NBTagType type() {
             return NBTagType.DOUBLE;
         }
-
-        @Override
-        public double getAsDouble() {
-            return (double) object;
-        }
     }
 
-    static class TagFloat extends NBTagPrimitive {
+    static class TagFloat extends TagNumber {
         public TagFloat(Object object) {
             super(object);
         }
@@ -146,11 +173,6 @@ abstract class NBTagPrimitive extends NBTagElement {
         @Override
         public NBTagType type() {
             return NBTagType.FLOAT;
-        }
-
-        @Override
-        public float getAsFloat() {
-            return (float) object;
         }
     }
 }

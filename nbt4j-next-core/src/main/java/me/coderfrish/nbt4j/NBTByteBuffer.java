@@ -6,7 +6,7 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-final class NBTByteBuffer extends BaseByteBuffer {
+public final class NBTByteBuffer extends BaseByteBuffer {
     public NBTByteBuffer(OutputStream os) {
         super(os);
     }
@@ -15,14 +15,42 @@ final class NBTByteBuffer extends BaseByteBuffer {
         super(is);
     }
 
-    public String readUTF() throws IOException {
+    /**
+     * @param name     NBT File Header name
+     * @param compound NBT Compound Bean
+     * @throws Exception throw Stream Exception
+     */
+    public void write(String name, NBTagCompound compound) throws Exception {
+        this.writeByte((byte) 10);
+        this.writeString(name);
+        this.writeCompound(compound);
+    }
+
+    /**
+     * @param compound NBT Compound Bean
+     * @throws Exception throw Stream Exception
+     */
+    public void write(NBTagCompound compound) throws Exception {
+        write("", compound);
+    }
+
+    /**
+     * @throws Exception throw Stream Exception
+     */
+    public NBTagCompound read() throws Exception {
+        this.readByte(); /* skip */
+        this.readString(); /* skip */
+        return this.readCompound();
+    }
+
+    String readString() throws IOException {
         byte[] strBytes = new byte[readShort()];
         readBytes(strBytes);
 
         return new String(strBytes, StandardCharsets.UTF_8);
     }
 
-    public void writeUTF(String value) throws IOException {
+    void writeString(String value) throws IOException {
         if (value == null) {
             this.writeInt(0);
             return;
@@ -33,41 +61,25 @@ final class NBTByteBuffer extends BaseByteBuffer {
         this.writeBytes(strBytes);
     }
 
-    public float readFloat() throws IOException {
-        return Float.intBitsToFloat(this.readInt());
-    }
-
-    public void writeFloat(float value) throws IOException {
-        this.writeInt(Float.floatToIntBits(value));
-    }
-
-    public double readDouble() throws IOException {
-        return Double.doubleToLongBits(this.readLong());
-    }
-
-    public void writeDouble(double value) throws IOException {
-        this.writeLong(Double.doubleToLongBits(value));
-    }
-
-    public void writeCompound(NBTagCompound compound) throws IOException {
+    void writeCompound(NBTagCompound compound) throws IOException {
         for (Map.Entry<String, NBTagElement> entry : compound.getDataEntries()) {
             NBTagType type = entry.getValue().type();
             this.writeByte((byte) (type.ordinal() + 1));
-            this.writeUTF(entry.getKey());
-            type.encode(this, entry);
+            this.writeString(entry.getKey());
+            type.encode(this, entry.getValue());
         }
 
         writeByte((byte) 0);
     }
 
-    public NBTagCompound readCompound() throws IOException {
+    NBTagCompound readCompound() throws IOException {
         NBTagCompound compound = new NBTagCompound();
-        for (;;) {
+        for (; ; ) {
             int typeId = readByte();
             if (typeId == 0) break;
 
             NBTagType type = NBTagType.values()[typeId - 1];
-            String key = readUTF();
+            String key = readString();
             NBTagElement value = type.decode(this);
             compound.addProperty(key, value);
         }
@@ -75,35 +87,35 @@ final class NBTByteBuffer extends BaseByteBuffer {
         return compound;
     }
 
-    public void writeIntArray(NBTagArray.NBTagIntArray value) throws IOException {
+    void writeIntArray(NBTagArray.NBTagIntArray value) throws IOException {
         this.writeInt(value.getAsIntArray().length);
         for (int item : value.getAsIntArray()) {
             this.writeInt(item);
         }
     }
 
-    public NBTagArray.NBTagIntArray readIntArray() throws IOException {
+    NBTagArray.NBTagIntArray readIntArray() throws IOException {
         int length = readInt();
         if (length < 0) {
             throw new RuntimeException("The prefix is of negative length ):");
         }
 
         int[] intArray = new int[length];
-        for (int i = 0;i < length;i++) {
+        for (int i = 0; i < length; i++) {
             intArray[i] = readInt();
         }
 
         return new NBTagArray.NBTagIntArray(intArray);
     }
 
-    public void writeByteArray(NBTagArray.NBTagByteArray value) throws IOException {
+    void writeByteArray(NBTagArray.NBTagByteArray value) throws IOException {
         this.writeInt(value.getAsByteArray().length);
         for (byte item : value.getAsByteArray()) {
             this.writeByte(item);
         }
     }
 
-    public NBTagArray.NBTagByteArray readByteArray() throws IOException {
+    NBTagArray.NBTagByteArray readByteArray() throws IOException {
         int length = readInt();
         if (length < 0) {
             throw new RuntimeException("The prefix is of negative length ):");
@@ -115,28 +127,28 @@ final class NBTByteBuffer extends BaseByteBuffer {
         return new NBTagArray.NBTagByteArray(bytes);
     }
 
-    public void writeLongArray(NBTagArray.NBTagLongArray value) throws IOException {
+    void writeLongArray(NBTagArray.NBTagLongArray value) throws IOException {
         this.writeInt(value.getAsLongArray().length);
         for (long item : value.getAsLongArray()) {
             this.writeLong(item);
         }
     }
 
-    public NBTagArray.NBTagLongArray readLongArray() throws IOException {
+    NBTagArray.NBTagLongArray readLongArray() throws IOException {
         int length = readInt();
         if (length < 0) {
             throw new RuntimeException("The prefix is of negative length ):");
         }
 
         long[] longArray = new long[length];
-        for (int i = 0;i < length;i++) {
+        for (int i = 0; i < length; i++) {
             longArray[i] = readLong();
         }
 
         return new NBTagArray.NBTagLongArray(longArray);
     }
 
-    public void writeList(NBTagList list) throws IOException {
+    void writeList(NBTagList list) throws IOException {
         if (list.getData().isEmpty()) {
             this.writeByte((byte) 0);
             this.writeInt(0);
@@ -151,7 +163,7 @@ final class NBTByteBuffer extends BaseByteBuffer {
         }
     }
 
-    public NBTagList readList() throws IOException {
+    NBTagList readList() throws IOException {
         NBTagList list = new NBTagList();
         int typeId = readByte();
         if (typeId == 0) {

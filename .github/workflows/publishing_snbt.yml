@@ -32,7 +32,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: SetENV
-        run: ./gradlew nbt4j-extra-snbt:publishMavenJavaPublicationToMavenLocal
+        run: ./gradlew nbt4j-extra-snbt:publish
         env:
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
